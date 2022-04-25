@@ -11,7 +11,7 @@ reset:
 
 loop:
     ;; Rotate LED pattern to right.
-    rol
+    ror
     sta $6000
     ;; Jump back to start
     jmp loop
