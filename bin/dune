@@ -1,0 +1,4 @@
+(executable
+ (public_name beneater_6502)
+ (name main)
+ (libraries beneater_6502 6502-ml containers))

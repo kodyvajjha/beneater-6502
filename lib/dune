@@ -1,0 +1,3 @@
+(library
+ (name beneater_6502)
+ (libraries 6502-ml containers))
