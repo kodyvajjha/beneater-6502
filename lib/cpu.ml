@@ -24,7 +24,9 @@ module EaterCPU = C6502.Make (struct
 
   let read (m : t) (a : uint16) : uint8 = m.(Uint16.to_int a)
 
-  let write m a v : unit = m.(Uint16.to_int a) <- v
+  (* TODO: Modify this to populate the Via.t state when writing happens
+     at the appropriate memory location. *)
+  let write (m : t) a v : unit = m.(Uint16.to_int a) <- v
 end)
 
 let set_pc cpu = EaterCPU.PC.set (EaterCPU.pc cpu)
