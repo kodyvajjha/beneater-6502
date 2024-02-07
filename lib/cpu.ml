@@ -2,7 +2,7 @@ open C6502.Utils
 open Stdint
 
 module EaterCPU = C6502.Make (struct
-  type t = uint8 array
+  type t = { rom: uint8 array }
   (** Instruction type *)
 
   type input = string
@@ -18,15 +18,15 @@ module EaterCPU = C6502.Make (struct
     (* The rom is loaded into the lower half of the address space, i.e., from
        0x8000 to 0xFFFF. This is why we add 32768 below. *)
     Bytes.iteri (fun i el -> mem.(i + 32768) <- u8 (int_of_char el)) store;
-    mem
+    { rom = mem }
 
   (* 0x000 to 0xFFFF main memory *)
 
-  let read (m : t) (a : uint16) : uint8 = m.(Uint16.to_int a)
+  let read (m : t) (a : uint16) : uint8 = m.rom.(Uint16.to_int a)
 
   (* TODO: Modify this to populate the Via.t state when writing happens
      at the appropriate memory location. *)
-  let write (m : t) a v : unit = m.(Uint16.to_int a) <- v
+  let write (m : t) a v : unit = m.rom.(Uint16.to_int a) <- v
 end)
 
 let set_pc cpu = EaterCPU.PC.set (EaterCPU.pc cpu)
@@ -37,9 +37,9 @@ let set_reg cpu = EaterCPU.Register.set (EaterCPU.registers cpu)
 
 let get_reg cpu = EaterCPU.Register.get (EaterCPU.registers cpu)
 
-let read_mem cpu a = (EaterCPU.memory cpu).(a)
+(* let read_mem cpu a = let mem = EaterCPU.memory cpu in mem.rom *)
 
-let write_mem cpu a v = (EaterCPU.memory cpu).(a) <- v
+(* let write_mem cpu a v = (EaterCPU.memory cpu).(a) <- v *)
 
 (** Character in the output text buffer. Address 0x5000 holds ACIA_DATA. *)
-let output_buf cpu = Char.chr @@ Uint8.to_int @@ read_mem cpu 0x5000
+(* let output_buf cpu = Char.chr @@ Uint8.to_int @@ read_mem cpu 0x5000 *)
