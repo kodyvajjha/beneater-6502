@@ -20,10 +20,8 @@ let repl () =
     EaterCPU.print_state cpu;
     ignore @@ EaterCPU.next_instruction cpu;
     try
-      CCFormat.printf "@[0x5000: %d@]@."
-        (Uint8.to_int @@ read_mem cpu (Uint16.of_int 0x5000));
-      CCFormat.printf "@[0x5001: %d@]@."
-        (Uint8.to_int @@ read_mem cpu (Uint16.of_int 0x5001));
+      CCFormat.printf "@[0x5000: %d@]@." (Uint8.to_int @@ read_mem cpu 0x5000);
+      CCFormat.printf "@[0x5001: %d@]@." (Uint8.to_int @@ read_mem cpu 0x5001);
       flush stdout;
       let input = read_line () in
       (match int_of_string_opt input with
@@ -32,7 +30,7 @@ let repl () =
         write_mem cpu 0x5001 (Uint8.of_int 0x08)
       | None -> ());
       CCFormat.printf "0x0200 : %c@."
-        (Char.chr (Uint8.to_int @@ read_mem cpu (Uint16.of_int 0x0200)))
+        (Char.chr (Uint8.to_int @@ read_mem cpu 0x0200))
     with
     | End_of_file ->
       CCFormat.printf "Ctrl+D caught, exiting!";

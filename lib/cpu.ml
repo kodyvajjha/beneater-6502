@@ -15,6 +15,8 @@ module EaterMemoryMap = struct
 
   let in_io_range addr = addr >= 0x4000 && addr <= 0x7FFF
 
+  let in_via_range addr = addr >= 0x6000 && addr <= 0x600F
+
   let in_rom_range addr = addr >= 0x8000 && addr <= 0xFFFF
 
   (**  Function to load a rom.*)
@@ -27,7 +29,8 @@ module EaterMemoryMap = struct
     let read = input file store 0 32768 in
     let store = Bytes.sub store 0 read in
     Bytes.iteri (fun i el -> rom.(i + 32768) <- u8 (int_of_char el)) store;
-    { rom }
+    let via : uint8 array = Array.make 0x10000 (u8 0xea) in
+    { rom; via }
 
   (* 0x000 to 0xFFFF main memory *)
 

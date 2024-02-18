@@ -1,4 +1,4 @@
 (executables
- (public_names main)
- (names main)
+ (public_names main via)
+ (names main via)
  (libraries beneater_6502 6502-ml containers))
