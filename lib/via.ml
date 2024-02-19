@@ -8,6 +8,16 @@
    Note: We are not implementing the entire 65c22 VIA but only that
     functionality to let it emulate a keypress. *)
 
+(*
+   Pipeline:
+
+   Grab char from input ->
+   Set key ready status ->
+   Convert char to ASCII data ->
+   use it to create term of type below ->
+   use this term to perform concrete writes at
+   mem locations 0x5000 and 0x5001 in the cpu
+*)
 type t = {
   mutable data: int;
   mutable status: int;
