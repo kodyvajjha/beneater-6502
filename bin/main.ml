@@ -16,7 +16,10 @@ module Log = (val Logs.src_log src : Logs.LOG)
 
 let repl () =
   let open Beneater_6502.Cpu in
-  let cpu = EaterCPU.create "bin/wozmon.bin" in
+  let cpu =
+    EaterCPU.create
+      { rom_path = "bin/wozmon.bin"; via = { data = 0xea; status = 0x00 } }
+  in
   (* Set the PC by reading address at FFF[C-D], which starts Wozmon. *)
   EaterCPU.PC.init (EaterCPU.pc cpu) (EaterCPU.memory cpu);
   (* Keep fetching and running instructions in the CPU. *)
