@@ -23,27 +23,26 @@ module Eater = struct
   open Beneater_6502
 
   type state = {
-    cpu: Cpu.EaterCPU.t;
+    cpu: Cpu.t;
     via: Via.t;
   }
 
   let run (s : state) =
-    let open Cpu in
     (* Set the PC by reading address at FFF[C-D], which starts Wozmon. *)
-    EaterCPU.PC.init (EaterCPU.pc s.cpu) (EaterCPU.memory s.cpu);
+    Cpu.PC.init (Cpu.pc s.cpu) (Cpu.memory s.cpu);
     (* Keep fetching and running instructions in the CPU. *)
     while true do
-      EaterCPU.print_state s.cpu;
+      Cpu.print_state s.cpu;
 
-      ignore @@ EaterCPU.next_instruction s.cpu
+      ignore @@ Cpu.next_instruction s.cpu
     done
 end
 
 let repl () =
-  let open Beneater_6502.Cpu in
-  let init_input : EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
+  let open Beneater_6502 in
+  let init_input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
   let init_state : Eater.state =
-    { cpu = EaterCPU.create init_input; via = { data = 0x00; status = 0x00 } }
+    { cpu = Cpu.create init_input; via = { data = 0x00; status = 0x00 } }
   in
   Eater.run init_state
 

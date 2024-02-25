@@ -45,21 +45,19 @@ end
 
 module _ : C6502.MemoryMap = EaterMemoryMap
 
-module EaterCPU = struct
-  include C6502.Make (EaterMemoryMap)
+include C6502.Make (EaterMemoryMap)
 
-  let set_pc cpu = PC.set (pc cpu)
+let set_pc cpu = PC.set (pc cpu)
 
-  let get_pc cpu = PC.get (pc cpu)
+let get_pc cpu = PC.get (pc cpu)
 
-  let set_reg cpu = Register.set (registers cpu)
+let set_reg cpu = Register.set (registers cpu)
 
-  let get_reg cpu = Register.get (registers cpu)
+let get_reg cpu = Register.get (registers cpu)
 
-  let read_mem cpu a = (memory cpu).main.(a)
+let read_mem cpu a = (memory cpu).main.(a)
 
-  let write_mem cpu a v = (memory cpu).main.(a) <- v
+let write_mem cpu a v = (memory cpu).main.(a) <- v
 
-  (** Character in the output text buffer. Address 0x5000 holds ACIA_DATA. *)
-  (* let output_buf cpu = Char.chr @@ Uint8.to_int @@ read_mem cpu 0x5000 *)
-end
+(** Character in the output text buffer. Address 0x5000 holds ACIA_DATA. *)
+(* let output_buf cpu = Char.chr @@ Uint8.to_int @@ read_mem cpu 0x5000 *)
