@@ -2,27 +2,22 @@ open C6502.Utils
 open Stdint
 
 module EaterMemoryMap = struct
-  type t = {
-    via: Via.t;
-    main: uint8 array;
-  }
+  type t = { main: uint8 array }
   (** Instruction type *)
 
-  type input = {
-    rom_path: string; (* rom path needed to initialize memory *)
-    via: Via.t;
-  }
+  type input = { rom_path: string (* rom path needed to initialize memory *) }
 
-  let in_ram_range addr = addr >= 0x0000 && addr <= 0x3FFF
+  let in_ram_range addr = addr >= u16 0x0000 && addr <= u16 0x3FFF
 
-  let in_io_range addr = addr >= 0x4000 && addr <= 0x7FFF
+  let in_io_range addr = addr >= u16 0x4000 && addr <= u16 0x7FFF
 
-  let in_via_range addr = addr >= 0x6000 && addr <= 0x600F
+  let in_via_range addr = addr >= u16 0x6000 && addr <= u16 0x600F
 
-  let in_rom_range addr = addr >= 0x8000 && addr <= 0xFFFF
+  let in_rom_range addr = addr >= u16 0x8000 && addr <= u16 0xFFFF
 
   (**  Function to load a rom.*)
   let create i : t =
+    (* 0x000 to 0xFFFF main memory *)
     let main : uint8 array = Array.make 0x10000 (u8 0xea) in
     let file = open_in_bin i.rom_path in
     let store = Bytes.create 32768 in
@@ -31,22 +26,26 @@ module EaterMemoryMap = struct
     (* The rom is loaded into the lower half of the address space, i.e., from
        0x8000 to 0xFFFF. This is why we add 32768 below. *)
     Bytes.iteri (fun i el -> main.(i + 32768) <- u8 (int_of_char el)) store;
-    main.(0x5000) <- u8 i.via.data;
-    main.(0x5001) <- u8 i.via.status;
-    { main; via = i.via }
-
-  (* 0x000 to 0xFFFF main memory *)
+    (* The via payload gets written to 0x5000 and 0x5001 of main memory at startup.
+       This is theoretically unnecessary.
+    *)
+    main.(0x5001) <- u8 0x00;
+    { main }
 
   let read (m : t) (a : uint16) : uint8 = m.main.(Uint16.to_int a)
 
   (* TODO: Modify this to populate the Via.t state when writing happens
      at the appropriate memory location. *)
-  let write (m : t) a v : unit = m.main.(Uint16.to_int a) <- v
+  let write (m : t) (addr : Uint16.t) v : unit =
+    if in_via_range addr then
+      ()
+    else
+      m.main.(Uint16.to_int addr) <- v
 end
 
-module EaterCPU = struct
-  module _ : C6502.MemoryMap = EaterMemoryMap
+module _ : C6502.MemoryMap = EaterMemoryMap
 
+module EaterCPU = struct
   include C6502.Make (EaterMemoryMap)
 
   let set_pc cpu = PC.set (pc cpu)

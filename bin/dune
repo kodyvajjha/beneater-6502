@@ -1,4 +1,4 @@
 (executables
- (public_names main via)
- (names main via)
+ (public_names main)
+ (names main)
  (libraries beneater_6502 6502-ml containers logs logs.fmt))

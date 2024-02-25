@@ -1,17 +1,17 @@
 (* open Stdint *)
 
-let rec repl () =
-  try
-    let char = input_char stdin in
-    CCFormat.printf "%x@." (Char.code char);
-    repl ()
-  with
-  | End_of_file ->
-    CCFormat.printf "Ctrl+D caught, exiting!";
-    exit 0
-  | Sys.Break ->
-    CCFormat.printf "Goodbye!@.";
-    exit 0
+(* let rec repl () =
+   try
+     let char = input_char stdin in
+     CCFormat.printf "%x@." (Char.code char);
+     repl ()
+   with
+   | End_of_file ->
+     CCFormat.printf "Ctrl+D caught, exiting!";
+     exit 0
+   | Sys.Break ->
+     CCFormat.printf "Goodbye!@.";
+     exit 0 *)
 
 (* let repl () =
    let open Beneater_6502.Cpu in
@@ -63,4 +63,4 @@ let rec repl () =
      with End_of_file -> CCFormat.printf "CTRL+D caught, exiting!"
    done *)
 
-let () = repl ()
+(* let () = repl () *)
