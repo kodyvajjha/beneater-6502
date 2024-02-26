@@ -24,3 +24,16 @@ type t = {
 }
 
 let pp fpf acia = CCFormat.fprintf fpf "@[%c@]" (Char.chr acia.data)
+
+let write (cpu : Cpu.t) (via : t) =
+  let open Stdint in
+  Cpu.write_mem cpu 0x5000 (Uint8.of_int via.data);
+  Cpu.write_mem cpu 0x5001 (Uint8.of_int via.status)
+(* let c = input_char stdin in
+   let input = CCFormat.sprintf "0x%x" (Char.code c) in
+   CCFormat.printf "You entered '%s'@." input;*)
+(* let input = read_line () in *)
+(* match int_of_string_opt input with
+   | Some i -> *)
+
+(* | None -> () *)
