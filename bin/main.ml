@@ -33,16 +33,15 @@ module Eater = struct
     (* Keep fetching and running instructions in the CPU. *)
     while true do
       Cpu.print_state s.cpu;
-
       ignore @@ Cpu.next_instruction s.cpu
     done
 end
 
 let repl () =
   let open Beneater_6502 in
-  let init_input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
+  let input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
   let init_state : Eater.state =
-    { cpu = Cpu.create init_input; via = { data = 0x00; status = 0x00 } }
+    { cpu = Cpu.create input; via = { data = 0x00; status = 0x00 } }
   in
   Eater.run init_state
 
