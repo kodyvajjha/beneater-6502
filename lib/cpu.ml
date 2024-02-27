@@ -59,5 +59,22 @@ let read_mem cpu a = (memory cpu).main.(a)
 
 let write_mem cpu a v = (memory cpu).main.(a) <- v
 
-(** Character in the output text buffer. Address 0x5000 holds ACIA_DATA. *)
 (* let output_buf cpu = Char.chr @@ Uint8.to_int @@ read_mem cpu 0x5000 *)
+
+(** Character in the output text buffer. Address 0x5000 holds ACIA_DATA. *)
+let run cpu =
+  let open Lwt.Syntax in
+  let rec loop () =
+    (* Keep fetching and running instructions in the CPU. *)
+    let* () = Lwt_unix.sleep 1.0 in
+    let* () = Lwt.return @@ print_state cpu in
+    let* _cycs = Lwt.return @@ next_instruction cpu in
+
+    loop ()
+  in
+  try%lwt
+    (* Set the PC by reading address at FFF[C-D], which starts Wozmon. *)
+    let* () = Lwt.return @@ PC.init (pc cpu) (memory cpu) in
+    loop ()
+  with C6502.Invalid_instruction (_addr, _opcode) ->
+    Lwt_io.printf "Invalid instruction"

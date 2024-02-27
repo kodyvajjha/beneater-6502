@@ -27,14 +27,7 @@ module Eater = struct
     via: Via.t;
   }
 
-  let run (s : state) =
-    (* Set the PC by reading address at FFF[C-D], which starts Wozmon. *)
-    Cpu.PC.init (Cpu.pc s.cpu) (Cpu.memory s.cpu);
-    (* Keep fetching and running instructions in the CPU. *)
-    while true do
-      Cpu.print_state s.cpu;
-      ignore @@ Cpu.next_instruction s.cpu
-    done
+  let run (s : state) = Cpu.run s.cpu
 end
 
 let repl () =
@@ -47,4 +40,4 @@ let repl () =
 
 let () =
   Logs.set_reporter (Logs_fmt.reporter ());
-  repl ()
+  Lwt_main.run @@ repl ()

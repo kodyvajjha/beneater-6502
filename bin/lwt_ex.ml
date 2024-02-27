@@ -19,9 +19,6 @@ let background_task () =
 
 (* Main function *)
 let main () =
-  (* Start the background task independently *)
-
-  (* Start detecting key presses *)
   Lwt_main.run (Lwt.pick [ background_task (); detect_key_press () ])
 
 (* Call the main function to start the program *)

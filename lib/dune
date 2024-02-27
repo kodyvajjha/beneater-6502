@@ -1,3 +1,5 @@
 (library
  (name beneater_6502)
- (libraries 6502-ml containers))
+ (preprocess
+  (pps lwt_ppx))
+ (libraries 6502-ml containers lwt lwt.unix))
