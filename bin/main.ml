@@ -17,26 +17,24 @@ module Log = (val Logs.src_log src : Logs.LOG)
 (* let rec run_cpu cpu =
    let open Beneater_6502.Cpu in
    EaterCPU.next_instruction cpu *)
-module Eater = struct
-  [@@@warning "-32"]
+(* module Eater = struct
+     [@@@warning "-32"]
 
-  open Beneater_6502
+     open Beneater_6502
 
-  type state = {
-    cpu: Cpu.t;
-    via: Via.t;
-  }
+     type state = {
+       cpu: Cpu.t;
+       via: Via.t;
+     }
 
-  let run (s : state) = Cpu.run s.cpu
-end
+     let run (s : state) = Cpu.run s.cpu
+   end *)
 
 let repl () =
   let open Beneater_6502 in
   let input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
-  let init_state : Eater.state =
-    { cpu = Cpu.create input; via = { data = 0x00; status = 0x00 } }
-  in
-  Eater.run init_state
+  let cpu = Cpu.create input in
+  Lwt.pick [ Cpu.run cpu; Via.write cpu ]
 
 let () =
   Logs.set_reporter (Logs_fmt.reporter ());

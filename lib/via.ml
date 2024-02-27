@@ -18,6 +18,8 @@
    use this term to perform concrete writes at
    mem locations 0x5000 and 0x5001 in the cpu
 *)
+open Lwt.Syntax
+
 type t = {
   mutable data: int;
   mutable status: int;
@@ -25,10 +27,34 @@ type t = {
 
 let pp fpf acia = CCFormat.fprintf fpf "@[%c@]" (Char.chr acia.data)
 
-let write (cpu : Cpu.t) (via : t) =
+let rec write (cpu : Cpu.t) =
   let open Stdint in
-  Cpu.write_mem cpu 0x5000 (Uint8.of_int via.data);
-  Cpu.write_mem cpu 0x5001 (Uint8.of_int via.status)
+  let* c = Lwt_io.read_char_opt Lwt_io.stdin in
+  let* () = Lwt_unix.sleep 0.1 in
+  match c with
+  | Some c ->
+    let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x08) in
+    let* () = Lwt_unix.sleep 0.1 in
+    let* () =
+      Lwt.return @@ Cpu.write_mem cpu 0x5000 (Uint8.of_int (Char.code c))
+    in
+    let* () = Lwt_unix.sleep 0.1 in
+    let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x00) in
+    let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
+    let* () =
+      Lwt_io.fprintf Lwt_io.stdout "0x5000: %c"
+        (Char.chr (Stdint.Uint8.to_int i))
+    in
+    write cpu
+  | None -> Lwt.return_unit
+
+let display (cpu : Cpu.t) =
+  let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
+  let* () =
+    Lwt_io.fprintf Lwt_io.stdout "%c" (Char.chr (Stdint.Uint8.to_int i))
+  in
+  Lwt.return_unit
+
 (* let c = input_char stdin in
    let input = CCFormat.sprintf "0x%x" (Char.code c) in
    CCFormat.printf "You entered '%s'@." input;*)
