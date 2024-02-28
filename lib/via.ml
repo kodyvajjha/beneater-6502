@@ -40,26 +40,9 @@ let rec write (cpu : Cpu.t) =
     in
     let* () = Lwt_unix.sleep 0.1 in
     let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x00) in
-    let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
-    let* () =
-      Lwt_io.fprintf Lwt_io.stdout "0x5000: %c"
-        (Char.chr (Stdint.Uint8.to_int i))
-    in
+    (*let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
+      let* () =
+          Lwt_io.fprintf Lwt_io.stdout "%c" (Char.chr (Stdint.Uint8.to_int i))
+        in *)
     write cpu
   | None -> Lwt.return_unit
-
-let display (cpu : Cpu.t) =
-  let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
-  let* () =
-    Lwt_io.fprintf Lwt_io.stdout "%c" (Char.chr (Stdint.Uint8.to_int i))
-  in
-  Lwt.return_unit
-
-(* let c = input_char stdin in
-   let input = CCFormat.sprintf "0x%x" (Char.code c) in
-   CCFormat.printf "You entered '%s'@." input;*)
-(* let input = read_line () in *)
-(* match int_of_string_opt input with
-   | Some i -> *)
-
-(* | None -> () *)

@@ -34,7 +34,7 @@ let repl () =
   let open Beneater_6502 in
   let input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
   let cpu = Cpu.create input in
-  Lwt.pick [ Cpu.run cpu; Via.write cpu ]
+  Lwt.join [ Cpu.run cpu; Via.write cpu; Display.show cpu ]
 
 let () =
   Logs.set_reporter (Logs_fmt.reporter ());
