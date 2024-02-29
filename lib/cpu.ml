@@ -1,6 +1,11 @@
 open C6502.Utils
 open Stdint
 
+type ('a, 'b) devices = {
+  main: 'a;
+  display: 'b;
+}
+
 module EaterMemoryMap = struct
   type t = { main: uint8 array }
   (** Instruction type *)
@@ -65,8 +70,8 @@ let write_mem cpu a v = (memory cpu).main.(a) <- v
 let run cpu =
   let open Lwt.Syntax in
   let rec loop () =
-    (* Keep fetching and running instructions in the CPU. *)
-    let* () = Lwt_unix.sleep 0.02 in
+    (* Keep fetching and running instructions in the CPU. The clock speed is 1MHz. *)
+    let* () = Lwt_unix.sleep 0.00001 in
     let* () = Lwt.return @@ print_state cpu in
     let* _cycs = Lwt.return @@ next_instruction cpu in
 
