@@ -1,10 +1,10 @@
 open C6502.Utils
 open Stdint
 
-type ('a, 'b) devices = {
-  main: 'a;
-  display: 'b;
-}
+(* type ('a, 'b) devices = {
+     main: 'a;
+     display: 'b;
+   } *)
 
 module EaterMemoryMap = struct
   type t = { main: uint8 array }
