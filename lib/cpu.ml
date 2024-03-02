@@ -7,7 +7,10 @@ open Stdint
    } *)
 
 module EaterMemoryMap = struct
-  type t = { main: uint8 array }
+  type t = {
+    main: uint8 array;
+    display: Display.t;
+  }
   (** Instruction type *)
 
   type input = { rom_path: string (* rom path needed to initialize memory *) }
@@ -35,16 +38,18 @@ module EaterMemoryMap = struct
        This is theoretically unnecessary.
     *)
     main.(0x5001) <- u8 0x00;
-    { main }
+    let display = Display.empty in
+    { main; display }
 
   let read (m : t) (a : uint16) : uint8 = m.main.(Uint16.to_int a)
 
-  (* TODO: Modify this to populate the Via.t state when writing happens
+  (* TODO: Modify this to populate the Display.t state when writing happens
      at the appropriate memory location. *)
-  let write (m : t) (addr : Uint16.t) v : unit =
-    if in_via_range addr then
-      ()
-    else
+  let write (m : t) (addr : uint16) v : unit =
+    if addr = u16 0x5004 then (
+      let curchar = Char.chr (Uint8.to_int @@ m.main.(Uint16.to_int addr)) in
+      Display.process curchar m.display
+    ) else
       m.main.(Uint16.to_int addr) <- v
 end
 
@@ -72,6 +77,7 @@ let run cpu =
   let rec loop () =
     (* Keep fetching and running instructions in the CPU. The clock speed is 1MHz. *)
     let* () = Lwt_unix.sleep 0.00001 in
+
     let* () = Lwt.return @@ print_state cpu in
     let* _cycs = Lwt.return @@ next_instruction cpu in
 

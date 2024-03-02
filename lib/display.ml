@@ -1,12 +1,17 @@
 type t = {
-  cursor: char;
-  buffer: string;
+  mutable cursor: char;
+  mutable buffer: string;
 }
 
 let empty = { cursor = ' '; buffer = "" }
 
-let process (c : char) display : t =
-  { cursor = c; buffer = display.buffer ^ CCString.of_char c }
+let process (c : char) display =
+  display.cursor <- c;
+  display.buffer <- display.buffer ^ CCString.of_char c
+
+let show (display : t) =
+  let { cursor; buffer } = display in
+  Lwt_io.printl (CCFormat.sprintf "%c %s" cursor buffer)
 
 (* open Lwt.Syntax
 

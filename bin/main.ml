@@ -17,7 +17,10 @@ module Eater = struct
 
   open Beneater_6502
 
-  type state = { cpu: Cpu.t (* display: Display.t; *) }
+  type state = {
+    cpu: Cpu.t;
+    display: Display.t;
+  }
 
   let run (s : state) = Cpu.run s.cpu
 end
@@ -25,8 +28,10 @@ end
 let repl () =
   let open Beneater_6502 in
   let input : Cpu.EaterMemoryMap.input = { rom_path = "bin/wozmon.bin" } in
-  let state : Eater.state = { cpu = Cpu.create input } in
-  Lwt.join [ Eater.run state; Via.write state.cpu (*Display.show state.cpu*) ]
+  let state : Eater.state =
+    { cpu = Cpu.create input; display = Display.empty }
+  in
+  Lwt.join [ Eater.run state; Via.write state.cpu; Display.show state.display ]
 
 let () =
   Logs.set_reporter (Logs_fmt.reporter ());
