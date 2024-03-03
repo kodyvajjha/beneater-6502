@@ -1,4 +1,4 @@
 (executables
- (public_names main lwt_ex)
- (names main lwt_ex)
- (libraries beneater_6502 6502-ml containers logs logs.fmt lwt lwt.unix))
+ (public_names wozmon)
+ (names wozmon)
+ (libraries beneater_6502 6502-ml containers lwt lwt.unix))
