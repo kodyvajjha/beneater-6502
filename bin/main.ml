@@ -31,7 +31,8 @@ let repl () =
   let state : Eater.state =
     { cpu = Cpu.create input; display = Display.empty }
   in
-  Lwt.join [ Eater.run state; Via.write state.cpu; Cpu.show_display state.cpu ]
+  Lwt.join
+    [ Eater.run state; Keyboard.write state.cpu; Cpu.show_display state.cpu ]
 
 let () =
   Logs.set_reporter (Logs_fmt.reporter ());
