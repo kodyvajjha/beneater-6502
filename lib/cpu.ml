@@ -76,7 +76,7 @@ let run cpu =
   let open Lwt.Syntax in
   let rec loop () =
     (* Keep fetching and running instructions in the CPU. The clock speed is 1MHz. *)
-    let* () = Lwt_unix.sleep 0.01 in
+    let* () = Lwt_unix.sleep 0.001 in
 
     (* let* () = Lwt.return @@ print_state cpu in *)
     let* _cycs = Lwt.return @@ next_instruction cpu in
