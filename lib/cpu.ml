@@ -43,8 +43,6 @@ module EaterMemoryMap = struct
 
   let read (m : t) (a : uint16) : uint8 = m.main.(Uint16.to_int a)
 
-  (* TODO: Modify this to populate the Display.t state when writing happens
-     at the appropriate memory location. *)
   let write (m : t) (addr : uint16) v : unit =
     if addr = u16 0x5000 then (
       let curchar = Char.chr (Uint8.to_int @@ v) in

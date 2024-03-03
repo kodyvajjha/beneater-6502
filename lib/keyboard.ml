@@ -20,13 +20,6 @@
 *)
 open Lwt.Syntax
 
-type t = {
-  mutable data: int;
-  mutable status: int;
-}
-
-let pp fpf acia = CCFormat.fprintf fpf "@[%c@]" (Char.chr acia.data)
-
 let rec write (cpu : Cpu.t) =
   let open Stdint in
   let* c = Lwt_io.read_char_opt Lwt_io.stdin in
