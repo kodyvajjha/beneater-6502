@@ -1,5 +1,5 @@
 (library
  (name beneater_6502)
  (preprocess
-  (pps lwt_ppx))
+  (pps lwt_ppx ppx_deriving.show))
  (libraries 6502-ml containers lwt lwt.unix))

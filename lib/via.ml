@@ -34,10 +34,11 @@ let rec write (cpu : Cpu.t) =
   match c with
   | Some c ->
     let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x08) in
-    let* () = Lwt_unix.sleep 0.1 in
+    (* let* () = Lwt_unix.sleep 0.1 in *)
     let* () =
       Lwt.return @@ Cpu.write_mem cpu 0x5000 (Uint8.of_int (Char.code c))
     in
+    let* () = Lwt_io.printf "You wrote %c\n" c in
     let* () = Lwt_unix.sleep 0.1 in
     let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x00) in
     (*let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in

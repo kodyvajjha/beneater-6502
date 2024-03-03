@@ -2,6 +2,7 @@ type t = {
   mutable cursor: char;
   mutable buffer: string;
 }
+[@@deriving show]
 
 let empty = { cursor = ' '; buffer = "" }
 
@@ -10,9 +11,10 @@ let process (c : char) display =
   CCFormat.printf "%c%!" c;
   display.buffer <- display.buffer ^ CCString.of_char c
 
-let show (display : t) =
-  let { cursor; buffer } = display in
-  Lwt_io.printl (CCFormat.sprintf "%c %s" cursor buffer)
+(* let show (_display : t) = *)
+(* let { cursor; buffer = _ } = display in *)
+(* let _ = failwith "failed" in *)
+(* Lwt_io.printl (CCFormat.sprintf "HELLOO!%c%!" cursor) *)
 
 (* open Lwt.Syntax
 
