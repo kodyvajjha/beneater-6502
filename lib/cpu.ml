@@ -90,7 +90,7 @@ let run cpu =
   with C6502.Invalid_instruction (_addr, _opcode) ->
     Lwt_io.printf "Invalid instruction"
 
-let show_display (cpu : t) =
-  let cpu = memory cpu in
-  let display = cpu.display in
-  Lwt_io.printl (CCFormat.sprintf "%a" Display.pp display)
+let show_display (_cpu : t) = Lwt.return_unit
+(* let cpu = memory cpu in
+   let display = cpu.display in
+   Lwt_io.printl (CCFormat.sprintf "%a" Display.pp display) *)
