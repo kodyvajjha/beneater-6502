@@ -46,8 +46,8 @@ module EaterMemoryMap = struct
   (* TODO: Modify this to populate the Display.t state when writing happens
      at the appropriate memory location. *)
   let write (m : t) (addr : uint16) v : unit =
-    if addr = u16 0x5004 then (
-      let curchar = Char.chr (Uint8.to_int @@ m.main.(Uint16.to_int addr)) in
+    if addr = u16 0x5000 then (
+      let curchar = Char.chr (Uint8.to_int @@ v) in
       Display.process curchar m.display
     ) else
       m.main.(Uint16.to_int addr) <- v
@@ -78,7 +78,7 @@ let run cpu =
     (* Keep fetching and running instructions in the CPU. The clock speed is 1MHz. *)
     let* () = Lwt_unix.sleep 0.00001 in
 
-    let* () = Lwt.return @@ print_state cpu in
+    (* let* () = Lwt.return @@ print_state cpu in *)
     let* _cycs = Lwt.return @@ next_instruction cpu in
 
     loop ()
@@ -89,3 +89,8 @@ let run cpu =
     loop ()
   with C6502.Invalid_instruction (_addr, _opcode) ->
     Lwt_io.printf "Invalid instruction"
+
+let show_display (cpu : t) =
+  let cpu = memory cpu in
+  let display = cpu.display in
+  Lwt_io.printl (CCFormat.sprintf "%c %s" display.cursor display.buffer)

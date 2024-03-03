@@ -16,7 +16,7 @@ ACIA_DATA   = $5000
 ACIA_STATUS = $5001
 ACIA_CMD    = $5002
 ACIA_CTRL   = $5003
-ACIA_DISPLAY = $5004
+
 
 RESET:
                 LDA     #$1F           ; 8-N-1, 19200 baud.
@@ -180,7 +180,7 @@ PRHEX:
                 ADC     #$06           ; Add offset for letter.
 
 ECHO:                
-                STA     ACIA_DISPLAY   ; Output character.
+                STA     ACIA_DATA      ; Output character.
                 RTS                    ; Return.
 
   .org $FFFA
