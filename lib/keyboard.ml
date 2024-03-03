@@ -8,16 +8,6 @@
    Note: We are not implementing the entire 65c22 VIA but only that
     functionality to let it emulate a keypress. *)
 
-(*
-   Pipeline:
-
-   Grab char from input ->
-   Set key ready status ->
-   Convert char to ASCII data ->
-   use it to create term of type below ->
-   use this term to perform concrete writes at
-   mem locations 0x5000 and 0x5001 in the cpu
-*)
 open Lwt.Syntax
 
 let rec write (cpu : Cpu.t) =
@@ -33,9 +23,6 @@ let rec write (cpu : Cpu.t) =
 
     let* () = Lwt_unix.sleep 0.01 in
     let* () = Lwt.return @@ Cpu.write_mem cpu 0x5001 (Uint8.of_int 0x00) in
-    (*let* i = Lwt.return @@ Cpu.read_mem cpu 0x5000 in
-      let* () =
-          Lwt_io.fprintf Lwt_io.stdout "%c" (Char.chr (Stdint.Uint8.to_int i))
-        in *)
+
     write cpu
   | None -> Lwt.return_unit

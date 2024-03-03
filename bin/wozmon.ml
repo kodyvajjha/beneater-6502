@@ -1,5 +1,16 @@
 (* For more inspiration see https://github.com/Firobe/nes-ml/blob/main/src/nes.ml *)
 
+(*
+   Pipeline:
+
+   Grab char from input ->
+   Set key ready status ->
+   Convert char to ASCII data ->
+   use it to create term of type below ->
+   use this term to perform concrete writes at
+   mem locations 0x5000 and 0x5001 in the cpu
+*)
+
 let () = Printexc.record_backtrace true
 
 let wozmon () =
