@@ -1,12 +1,7 @@
-type t = {
-  mutable cursor: char;
-  mutable buffer: string;
-}
-[@@deriving show]
+type t = { mutable cursor: char } [@@deriving show]
 
-let empty = { cursor = ' '; buffer = "" }
+let empty = { cursor = ' ' }
 
 let process (c : char) display =
   display.cursor <- c;
-  CCFormat.printf "%c%!" c;
-  display.buffer <- display.buffer ^ CCString.of_char c
+  CCFormat.printf "%c%!" c
