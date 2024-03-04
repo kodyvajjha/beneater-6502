@@ -32,4 +32,5 @@ I had been following along Ben Eater's incredible series of videos on the 6502 c
 ## Future Work 
 
 1. Support MS BASIC.
-2. Support more hardware
+2. Support more hardware.
+3. Use Eio?
